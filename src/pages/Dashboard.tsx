@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Navbar from "../components/layout/Navbar";
 import SubjectCard from "../components/ui/SubjectCard";
 import Button from "../components/ui/Button";
 import Footer from "../components/layout/Footer.tsx";
+import { toPng } from "html-to-image"; 
 import { calculateGWA } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 
 function Dashboard() {
+  const [downloading, setDownloading] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const scheduleRef = useRef<null>(null);
   const [gwa, setGwa] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([
@@ -42,13 +46,36 @@ function Dashboard() {
     setGwa(calculateGWA(subjects));
   };
 
+  const handleDownload = async () => {
+    if (!scheduleRef.current) return;
+    setDownloading(true);
+    setIsExporting(true);
+
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    );
+
+    try {
+      const dataUrl = await toPng(scheduleRef.current);
+      const link = document.createElement("a");
+      link.download = "Echo | GWA Summarization Report.png";
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Download failed:", err);
+    } finally {
+      setIsExporting(false);
+      setDownloading(false);
+    }
+  };
+
   return (
-    <div className="bg-[#FAF7FF] h-screen">
+    <div className="bg-[#FBF8F3] min-h-screen">
       <Navbar />
-      <p className="font-[Amaranth] text-center my-10 italic text-xl">Know where your GWA is headed.</p>
+      <p className="font-[Amaranth] text-center my-10 italic text-2xl">Know where your GWA is headed.</p>
 
       <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden">
-        <p className="bg-[#C4B5FD] text-sm w-full text-white font-semibold px-3 py-1">Calculate your grades</p>
+        <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Calculate your grades</p>
 
         <div className="px-5 mt-5 flex flex-col gap-3">
           {subjects.map((s, index) => (
@@ -67,22 +94,29 @@ function Dashboard() {
 
         {error && <p className="text-xs text-red-500 text-center mt-2">{error}</p>}
 
-        <div className="my-2 flex flex-row gap-3">
-          <Button onClick={addSubject}>
-            <p className="px-3 py-1 rounded text-xs text-[#6D28D9] border border-[#6D28D9] hover:bg-[#6D28D9] hover:text-white transition duration-200">
-              + Add Subject
-            </p>
+        <div className="my-3 flex flex-row gap-3">
+          <Button
+            onClick={addSubject}
+          >
+            <span className="font-mono px-3 py-1.5 rounded text-xs text-[#232323] border border-[#232323] hover:bg-[#232323] hover:text-white transition duration-200 leading-none">+ Add Subject</span>
           </Button>
-          <Button onClick={calculateGrades}>
-            <p className="px-3 py-1 rounded text-xs text-white border bg-[#6D28D9] hover:bg-white hover:text-[#6D28D9] transition duration-200">
-              Calculate GWA
-            </p>
+
+          <Button
+            onClick={calculateGrades}
+          >
+            <span className="font-mono leading-none px-3 py-1.5 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Calculate GWA</span>
           </Button>
         </div>
-
-        {gwa === null ? "" : <p>GWA: {gwa}</p>}
-
       </div>
+      
+      {!gwa !== null && (
+        <div ref={scheduleRef} className="bg-white mt-5 p-3 shadow flex justify-center items-center w-fit mx-auto rounded">
+          <div className="flex flex-row items-center justify-between">
+            <p className="font-mono text-[#232323] text-[1.5rem]">Echo</p>
+            <p className=""></p>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

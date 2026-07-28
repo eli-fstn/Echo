@@ -7,9 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        Coiny: ["Coiny", "sans-serif"],
-        Amaranth: ["Amaranth", "sans-serif"],
-        Parisienne: ["Parisienne", "sans-serif"],
+        mono: ["Geist Mono", "monospace"],
+        inter: ["Inter", "sans-serif"],
       },
     },
   },

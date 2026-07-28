@@ -19,17 +19,17 @@ function SubjectCard({ subjectName, grades, units, onGradeChange, onUnitsChange,
   return (
     <div className="bg-white border border-gray-300 rounded shadow flex flex-row w-fit p-3 gap-3">
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Subject <span className="text-red-500">*</span></label>
+        <label className="text-xs font-mono text-gray-500 font-medium mb-1">Subject (Optional)<span className="text-red-500">*</span></label>
         <input
           type="text"
           defaultValue={subjectName}
           placeholder="e.g. Understanding The Self"
-          className="text-xs w-60 border border-gray-300 px-3 py-1 rounded outline-none focus:border-[#6D28D9]"
+          className="text-xs w-60 border border-gray-300 px-3 py-1 rounded outline-none focus:border-[#232323]"
         />
       </div>
 
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Grades <span className="text-red-500">*</span></label>
+        <label className="text-xs font-mono text-gray-500 font-medium mb-1">Grades<span className="text-red-500">*</span></label>
         <input
           type="number"
           value={grades}
@@ -38,14 +38,14 @@ function SubjectCard({ subjectName, grades, units, onGradeChange, onUnitsChange,
           min={1}
           max={5}
           step={0.25}
-          className={`text-xs border px-3 py-1 rounded outline-none focus:border-[#6D28D9] ${
+          className={`text-xs border px-3 py-1 rounded outline-none focus:border-[#232323] ${
             gradeInvalid ? "border-red-500" : "border-gray-300"
           }`}
         />
       </div>
 
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Units <span className="text-red-500">*</span></label>
+        <label className="text-xs font-mono text-gray-500 font-medium mb-1">Units<span className="text-red-500">*</span></label>
         <input
           type="number"
           value={units}
@@ -54,7 +54,7 @@ function SubjectCard({ subjectName, grades, units, onGradeChange, onUnitsChange,
           min={1}
           max={9}
           step={1}
-          className={`text-xs border px-3 py-1 rounded outline-none focus:border-[#6D28D9] ${
+          className={`text-xs border px-3 py-1 rounded outline-none focus:border-[#232323] ${
             unitsInvalid ? "border-red-500" : "border-gray-300"
           }`}
         />
