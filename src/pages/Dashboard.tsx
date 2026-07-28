@@ -2,11 +2,13 @@ import { useState } from "react";
 import Navbar from "../components/layout/Navbar";
 import SubjectCard from "../components/ui/SubjectCard";
 import Button from "../components/ui/Button";
+import Footer from "../components/layout/Footer.tsx";
 import { calculateGWA } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 
 function Dashboard() {
-  const [showGWA, setShowGWA] = useState<boolean>(false);
+  const [gwa, setGwa] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([
     { id: crypto.randomUUID(), grade: "", units: "" },
   ]);
@@ -26,9 +28,19 @@ function Dashboard() {
   };
 
   const calculateGrades = () => {
-    setShowGWA(true);
-    calculateGWA(subjects);
-  } 
+    const hasEmptyFields = subjects.some(
+      (s) => s.grade.trim() === "" || s.units.trim() === ""
+    );
+
+    if (hasEmptyFields) {
+      setError("Grades or Units field can not be empty.");
+      setGwa(null);
+      return;
+    }
+
+    setError(null);
+    setGwa(calculateGWA(subjects));
+  };
 
   return (
     <div className="bg-[#FAF7FF] h-screen">
@@ -48,9 +60,12 @@ function Dashboard() {
               onUnitsChange={(v: string) => updateSubject(s.id, "units", v)}
               onRemove={() => removeSubject(s.id)}
               canRemove={index !== 0}
+              showError={error !== null}
             />
           ))}
         </div>
+
+        {error && <p className="text-xs text-red-500 text-center mt-2">{error}</p>}
 
         <div className="my-2 flex flex-row gap-3">
           <Button onClick={addSubject}>
@@ -58,18 +73,18 @@ function Dashboard() {
               + Add Subject
             </p>
           </Button>
-          <Button onClick={() => {calculateGrades()}}>
+          <Button onClick={calculateGrades}>
             <p className="px-3 py-1 rounded text-xs text-white border bg-[#6D28D9] hover:bg-white hover:text-[#6D28D9] transition duration-200">
               Calculate GWA
             </p>
           </Button>
         </div>
 
-        {showGWA && (
-          <p>GWA: {calculateGWA(subjects)}</p>
-        )}
+        {gwa === null ? "" : <p>GWA: {gwa}</p>}
 
       </div>
+
+      <Footer />
     </div>
   );
 }
