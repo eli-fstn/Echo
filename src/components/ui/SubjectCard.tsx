@@ -3,17 +3,29 @@ import Button from "./Button";
 
 interface GradesProps {
   subjectName?: string;
-  grades?: string;
-  units?: number;
+  grades: string;
+  units: string;
+  onGradeChange: (value: string) => void;
+  onUnitsChange: (value: string) => void;
   onRemove?: () => void;
   canRemove?: boolean;
 }
 
-function SubjectCard({ subjectName, grades, units, onRemove, canRemove }: GradesProps) {
+function SubjectCard({
+  subjectName,
+  grades,
+  units,
+  onGradeChange,
+  onUnitsChange,
+  onRemove,
+  canRemove = true,
+}: GradesProps) {
   return (
     <div className="bg-white border border-gray-300 rounded flex flex-row w-fit p-3 gap-3">
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Subject <span className="text-red-500">*</span></label>
+        <label className="text-xs text-gray-500 font-medium mb-1">
+          Subject <span className="text-red-500">*</span>
+        </label>
         <input
           type="text"
           defaultValue={subjectName}
@@ -21,11 +33,15 @@ function SubjectCard({ subjectName, grades, units, onRemove, canRemove }: Grades
           className="text-xs w-60 border border-gray-200 px-3 py-1 rounded outline-none focus:border-[#6D28D9]"
         />
       </div>
+
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Grades <span className="text-red-500">*</span></label>
+        <label className="text-xs text-gray-500 font-medium mb-1">
+          Grades <span className="text-red-500">*</span>
+        </label>
         <input
           type="number"
-          defaultValue={grades}
+          value={grades}
+          onChange={(e) => onGradeChange(e.target.value)}
           placeholder="1.25"
           min={1}
           max={5}
@@ -33,11 +49,15 @@ function SubjectCard({ subjectName, grades, units, onRemove, canRemove }: Grades
           className="text-xs border border-gray-200 px-3 py-1 rounded outline-none focus:border-[#6D28D9]"
         />
       </div>
+
       <div className="flex flex-col">
-        <label className="text-xs text-gray-500 font-medium mb-1">Units <span className="text-red-500">*</span></label>
+        <label className="text-xs text-gray-500 font-medium mb-1">
+          Units <span className="text-red-500">*</span>
+        </label>
         <input
           type="number"
-          defaultValue={units}
+          value={units}
+          onChange={(e) => onUnitsChange(e.target.value)}
           placeholder="3"
           min={1}
           max={9}
