@@ -85,11 +85,12 @@ function Dashboard() {
   });
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen">
+    <div className="bg-[#FBF8F3] min-h-screen flex flex-col">
       <Navbar />
       <p className="font-[Amaranth] text-center my-10 italic text-2xl">Know where your GWA is headed.</p>
 
-      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden">
+      {/* CARD */}
+      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
         <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Calculate your grades</p>
 
         <div className="px-5 mt-5 flex flex-col gap-3">
@@ -124,8 +125,9 @@ function Dashboard() {
         </div>
       </div>
       
+      {/* SUMMARY REPORT */}
       {gwa !== null && (
-        <div ref={scheduleRef} className="bg-white mt-5 p-3 shadow w-fit mx-auto rounded">
+        <div ref={scheduleRef} className="bg-white mb-20 py-3 px-5 shadow w-fit mx-auto rounded">
 
           {/* HEADER */}
           <div className="grid grid-cols-2 items-center gap-70 border-b border-b-gray-200">
@@ -147,10 +149,11 @@ function Dashboard() {
           {/* TABLE */}
           <table className="border border-gray-200 w-full">
             <thead>
-              <tr className="grid grid-cols-[2fr_1fr_1fr] gap-5 mx-2 text-gray-500">
+              <tr className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-5 mx-2 text-gray-500">
                 <td className="text-xs font-mono mt-1">Subjects</td>
                 <td className="text-xs font-mono mt-1">Grades</td>
-                <td className="text-xs font-mono mt-1">Subjects</td>
+                <td className="text-xs font-mono mt-1">Units</td>
+                <td className="text-xs font-mono mt-1">Weighted Grade</td>
               </tr>
             </thead>
           </table>
