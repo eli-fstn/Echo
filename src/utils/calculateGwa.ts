@@ -1,7 +1,19 @@
 export interface Subject {
   id: string;
+  subjectName: string;
   grade: string;
   units: string;
+}
+
+export function calculateWeightedGrade(subject: Subject): string {
+  const grade = parseFloat(subject.grade);
+  const units = parseFloat(subject.units);
+
+  if (isNaN(grade) || isNaN(units)) {
+    return "—";
+  }
+
+  return (grade * units).toFixed(2);
 }
 
 export function calculateGWA(subjects: Subject[]): string {
