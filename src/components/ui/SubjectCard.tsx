@@ -2,9 +2,10 @@ import Button from "./Button";
 import { Icon } from "@iconify/react";
 
 interface GradesProps {
-  subjectName?: string;
+  subjectName: string;
   grades: string;
   units: string;
+  onSubjectNameChange: (value: string) => void;
   onGradeChange: (value: string) => void;
   onUnitsChange: (value: string) => void;
   onRemove?: () => void;
@@ -12,7 +13,7 @@ interface GradesProps {
   showError?: boolean;
 }
 
-function SubjectCard({ subjectName, grades, units, onGradeChange, onUnitsChange, onRemove, canRemove, showError = false, }: GradesProps) {
+function SubjectCard({ subjectName, grades, units, onSubjectNameChange, onGradeChange, onUnitsChange, onRemove, canRemove, showError = false, }: GradesProps) {
   const gradeInvalid = showError && grades.trim() === "";
   const unitsInvalid = showError && units.trim() === "";
 
@@ -22,7 +23,8 @@ function SubjectCard({ subjectName, grades, units, onGradeChange, onUnitsChange,
         <label className="text-xs font-mono text-gray-500 font-medium mb-1">Subject (Optional)<span className="text-red-500">*</span></label>
         <input
           type="text"
-          defaultValue={subjectName}
+          value={subjectName}
+          onChange={(e) => onSubjectNameChange(e.target.value)}
           placeholder="e.g. Understanding The Self"
           className="text-xs w-60 border border-gray-300 px-3 py-1 rounded outline-none focus:border-[#232323]"
         />
