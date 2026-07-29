@@ -3,13 +3,14 @@ import Navbar from "../components/layout/Navbar";
 import SubjectCard from "../components/ui/SubjectCard";
 import Button from "../components/ui/Button";
 import Footer from "../components/layout/Footer.tsx";
-import { toPng } from "html-to-image"; 
+import logo from "../assets/Echo-Logo.png";
+// import { toPng } from "html-to-image"; 
 import { calculateGWA } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 
 function Dashboard() {
-  const [downloading, setDownloading] = useState<boolean>(false);
-  const [isExporting, setIsExporting] = useState<boolean>(false);
+  // const [downloading, setDownloading] = useState<boolean>(false);
+  // const [isExporting, setIsExporting] = useState<boolean>(false);
   const scheduleRef = useRef<null>(null);
   const [gwa, setGwa] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -46,28 +47,42 @@ function Dashboard() {
     setGwa(calculateGWA(subjects));
   };
 
-  const handleDownload = async () => {
-    if (!scheduleRef.current) return;
-    setDownloading(true);
-    setIsExporting(true);
+  // const handleDownload = async () => {
+  //   if (!scheduleRef.current) return;
+  //   setDownloading(true);
+  //   setIsExporting(true);
 
-    await new Promise((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(resolve))
-    );
+  //   await new Promise((resolve) =>
+  //     requestAnimationFrame(() => requestAnimationFrame(resolve))
+  //   );
 
-    try {
-      const dataUrl = await toPng(scheduleRef.current);
-      const link = document.createElement("a");
-      link.download = "Echo | GWA Summarization Report.png";
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Download failed:", err);
-    } finally {
-      setIsExporting(false);
-      setDownloading(false);
-    }
-  };
+  //   try {
+  //     const dataUrl = await toPng(scheduleRef.current);
+  //     const link = document.createElement("a");
+  //     link.download = "Echo | GWA Summarization Report.png";
+  //     link.href = dataUrl;
+  //     link.click();
+  //   } catch (err) {
+  //     console.error("Download failed:", err);
+  //   } finally {
+  //     setIsExporting(false);
+  //     setDownloading(false);
+  //   }
+  // };
+
+  const date = new Date();
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+
+  const time24 = date.toLocaleTimeString('en-US', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 
   return (
     <div className="bg-[#FBF8F3] min-h-screen">
@@ -110,11 +125,36 @@ function Dashboard() {
       </div>
       
       {!gwa !== null && (
-        <div ref={scheduleRef} className="bg-white mt-5 p-3 shadow flex justify-center items-center w-fit mx-auto rounded">
-          <div className="flex flex-row items-center justify-between">
-            <p className="font-mono text-[#232323] text-[1.5rem]">Echo</p>
-            <p className=""></p>
+        <div ref={scheduleRef} className="bg-white mt-5 p-3 shadow w-fit mx-auto rounded">
+
+          {/* HEADER */}
+          <div className="grid grid-cols-2 items-center gap-70 border-b border-b-gray-200">
+            <div className="flex flex-col items-start">
+              <div className="flex flex-row items-center">
+                <img src={logo} className="w-10 h-10 rounded mr-1" />
+                <p className="font-mono text-[#232323] mt-1 text-[1.5rem]">Echo</p>
+              </div>
+              <p className="text-sm font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono font-medium text-sm">{formattedDate}</p>
+              <p className="font-mono text-xs">{time24}</p>
+            </div>
           </div>
+
+          <p className="font-bold text-center my-5">GWA Summary Report</p>
+
+          {/* TABLE */}
+          <table className="border border-gray-200 w-full">
+            <thead>
+              <tr className="grid grid-cols-[2fr_1fr_1fr] gap-5 mx-2 text-gray-500">
+                <td className="text-xs font-mono mt-1">Subjects</td>
+                <td className="text-xs font-mono mt-1">Grades</td>
+                <td className="text-xs font-mono mt-1">Subjects</td>
+              </tr>
+            </thead>
+          </table>
+        
         </div>
       )}
 
