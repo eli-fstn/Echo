@@ -12,7 +12,6 @@ import TypingText from "../components/ui/TypingText.tsx";
 
 function Dashboard() {
   const [downloading, setDownloading] = useState<boolean>(false);
-  const [isExporting, setIsExporting] = useState<boolean>(false);
   const scheduleRef = useRef<null>(null);
   const [gwa, setGwa] = useState<string | null>(null);
   const [reportSubjects, setReportSubjects] = useState<Subject[]>([]);
@@ -54,7 +53,6 @@ function Dashboard() {
   const handleDownload = async () => {
     if (!scheduleRef.current) return;
     setDownloading(true);
-    setIsExporting(true);
 
     await new Promise((resolve) =>
       requestAnimationFrame(() => requestAnimationFrame(resolve))
@@ -70,7 +68,6 @@ function Dashboard() {
       console.error("Download failed:", err);
     } finally {
       setDownloading(false);
-      setIsExporting(false);
     }
   };
 
