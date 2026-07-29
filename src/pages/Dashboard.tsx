@@ -133,8 +133,8 @@ function Dashboard() {
           <div className="grid grid-cols-2 items-center gap-70 border-b border-b-gray-200">
             <div className="flex flex-col items-start">
               <div className="flex flex-row items-center">
-                <img src={logo} className="w-10 h-10 rounded mr-1" />
-                <p className="font-mono text-[#232323] mt-1 text-[1.5rem]">Echo</p>
+                <img src={logo} alt="Echo Logo" className="w-10 h-10 rounded mr-1" />
+                <p className="font-mono text-[#232323] mt-0.5 text-[1.5rem]">Echo</p>
               </div>
               <p className="text-sm font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
             </div>
