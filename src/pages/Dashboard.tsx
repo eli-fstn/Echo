@@ -124,7 +124,7 @@ function Dashboard() {
         </div>
       </div>
       
-      {!gwa !== null && (
+      {gwa !== null && (
         <div ref={scheduleRef} className="bg-white mt-5 p-3 shadow w-fit mx-auto rounded">
 
           {/* HEADER */}
