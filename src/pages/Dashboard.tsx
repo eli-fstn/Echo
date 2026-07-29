@@ -4,13 +4,13 @@ import SubjectCard from "../components/ui/SubjectCard";
 import Button from "../components/ui/Button";
 import Footer from "../components/layout/Footer.tsx";
 import logo from "../assets/Echo-Logo.png";
-import { toPng } from "html-to-image"; 
+// import { toPng } from "html-to-image"; 
 import { calculateGWA } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 
 function Dashboard() {
-  const [downloading, setDownloading] = useState<boolean>(false);
-  const [isExporting, setIsExporting] = useState<boolean>(false);
+  // const [downloading, setDownloading] = useState<boolean>(false);
+  // const [isExporting, setIsExporting] = useState<boolean>(false);
   const scheduleRef = useRef<null>(null);
   const [gwa, setGwa] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -47,28 +47,28 @@ function Dashboard() {
     setGwa(calculateGWA(subjects));
   };
 
-  const handleDownload = async () => {
-    if (!scheduleRef.current) return;
-    setDownloading(true);
-    setIsExporting(true);
+  // const handleDownload = async () => {
+  //   if (!scheduleRef.current) return;
+  //   setDownloading(true);
+  //   setIsExporting(true);
 
-    await new Promise((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(resolve))
-    );
+  //   await new Promise((resolve) =>
+  //     requestAnimationFrame(() => requestAnimationFrame(resolve))
+  //   );
 
-    try {
-      const dataUrl = await toPng(scheduleRef.current);
-      const link = document.createElement("a");
-      link.download = "Echo | GWA Summarization Report.png";
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Download failed:", err);
-    } finally {
-      setIsExporting(false);
-      setDownloading(false);
-    }
-  };
+  //   try {
+  //     const dataUrl = await toPng(scheduleRef.current);
+  //     const link = document.createElement("a");
+  //     link.download = "Echo | GWA Summarization Report.png";
+  //     link.href = dataUrl;
+  //     link.click();
+  //   } catch (err) {
+  //     console.error("Download failed:", err);
+  //   } finally {
+  //     setIsExporting(false);
+  //     setDownloading(false);
+  //   }
+  // };
 
   const date = new Date();
   const formattedDate = new Intl.DateTimeFormat('en-US', {
