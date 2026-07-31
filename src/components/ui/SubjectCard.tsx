@@ -26,7 +26,7 @@ function SubjectCard({ subjectName, grades, units, onSubjectNameChange, onGradeC
           value={subjectName}
           onChange={(e) => onSubjectNameChange(e.target.value)}
           placeholder="e.g. Understanding The Self"
-          className="text-xs w-60 border border-gray-300 px-3 py-1 rounded outline-none focus:border-[#232323]"
+          className="text-xs w-60 border border-gray-300 px-2 py-1 rounded outline-none focus:border-[#232323]"
         />
       </div>
 

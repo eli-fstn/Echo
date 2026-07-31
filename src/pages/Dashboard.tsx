@@ -5,8 +5,7 @@ import Button from "../components/ui/Button";
 import Footer from "../components/layout/Footer.tsx";
 import logo from "../assets/Echo-Logo.png";
 import { toPng } from "html-to-image"; 
-import { calculateGWA } from "../utils/calculateGwa.ts";
-import { calculateWeightedGrade } from "../utils/calculateGwa.ts";
+import { calculateGWA, calculateWeightedGrade, TotalUnits, TotalWeighted, LatinHonor } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 import TypingText from "../components/ui/TypingText.tsx";
 
@@ -54,6 +53,7 @@ function Dashboard() {
     if (!scheduleRef.current) return;
     setDownloading(true);
 
+    await document.fonts.ready;
     await new Promise((resolve) =>
       requestAnimationFrame(() => requestAnimationFrame(resolve))
     );
@@ -61,7 +61,7 @@ function Dashboard() {
     try {
       const dataUrl = await toPng(scheduleRef.current);
       const link = document.createElement("a");
-      link.download = "Echo | GWA Summarization Report.png";
+      link.download = "Echo - GWA Summarization Report.png";
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -126,31 +126,25 @@ function Dashboard() {
       </div>
       
       {/* SUMMARY REPORT */}
-      {!gwa !== null && (
+      {gwa !== null && (
         <div  className="bg-white mb-20 shadow w-198.5 mx-auto rounded">
-          <div ref={scheduleRef} className={`bg-white py-3 px-5 w-198.5 min-h-280.75`}>
+          <div ref={scheduleRef} className={`bg-white py-3 px-5 `}>
 
-            {/* HEADER */}
-            <div className="grid grid-cols-2 items-center gap-70 border-b border-b-gray-200">
-              <div className="flex flex-col items-start">
-                <div className="flex flex-row items-center">
-                  <img src={logo} alt="Echo Logo" className="w-10 h-10 rounded mr-1" />
-                  <p className="font-mono text-[#232323] mt-1 text-[1.5rem]">Echo</p>
-                </div>
-                <p className="text-sm font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
-              </div>
-              <div className="text-right">
-                <p className="font-mono font-medium text-sm">{formattedDate}</p>
-                <p className="font-mono text-xs">{time24}</p>
-              </div>
+            <p className="font-bold text-[1.3rem] text-center mt-3">GWA Summary Report</p>
+
+            <div className="mt-3 flex flex-col text-center">
+              <p className="text-xs">Your GWA:</p>
+              <p className="font-mono text-[2rem] font-bold">{gwa}</p>
             </div>
 
-            <p className="font-bold text-[1.3rem] text-center my-5">GWA Summary Report</p>
+            {gwa !== null && parseFloat(gwa) <= 1.75 && (
+              <p className="text-sm text-center mt-3">Eligible for <span className="font-bold font-mono text-[1rem] ml-1">{gwa && LatinHonor(parseFloat(gwa))}</span></p>
+            )}
 
             {/* TABLE */}
-            <table className="border border-gray-200 w-full">
+            <table className="border border-gray-200 w-full mt-5">
               <thead>
-                <tr className="grid grid-cols-[3fr_1fr_1fr_1fr] text-sm font-bold gap-5 px-3 py-3 text-gray-500 bg-gray-100">
+                <tr className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] text-xs font-bold gap-5 px-3 py-2 text-gray-500 bg-gray-100 tracking-wide uppercase">
                   <td className="">Subjects</td>
                   <td className="">Grades</td>
                   <td className="">Units</td>
@@ -159,7 +153,7 @@ function Dashboard() {
               </thead>
               <tbody>
                 {reportSubjects.map((s) => (
-                  <tr key={s.id} className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-5 py-2 mx-3 border-b border-b-gray-100">
+                  <tr key={s.id} className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] gap-5 py-2 mx-3 border-b border-b-gray-100">
                     <td className="text-xs font-mono mt-0.5 truncate">{s.subjectName}</td>
                     <td className="text-xs font-mono mt-0.5">{s.grade}</td>
                     <td className="text-xs font-mono mt-0.5">{s.units}</td>
@@ -169,18 +163,78 @@ function Dashboard() {
               </tbody>
             </table>
 
-            <div className="mt-3 flex flex-col">
-              <p className="text-xs">Your GWA:</p>
-              <p className="font-mono text-[2rem] font-bold">{gwa}</p>
+            {/* DETAILS */}
+            <div className="border-t border-t-gray-200 mt-5 pt-5 grid grid-cols-2 gap-6 items-start">
+              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Summary</p>
+                <div className="flex flex-col gap-2 font-mono text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500 text-xs">Total Subjects</span>
+                    <span className="font-semibold">{reportSubjects.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500 text-xs">Total Units</span>
+                    <span className="font-semibold">{TotalUnits(reportSubjects)}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-t border-gray-200 pt-2 mt-1">
+                    <span className="text-gray-500 text-xs">Total Weighted</span>
+                    <span className="font-semibold">{TotalWeighted(reportSubjects)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">How this was calculated</p>
+                <div className="font-mono text-xs text-gray-600 flex flex-col gap-1">
+                  <p>GWA = Σ(Grade × Units) ÷ Σ(Units)</p>
+                  <p>= {TotalWeighted(reportSubjects)} ÷ {TotalUnits(reportSubjects)}</p>
+                  <p className="font-bold text-gray-800">= {gwa}</p>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-2">Latin Honor Qualifications</p>
+                  <div className="flex flex-col gap-1 font-mono text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Summa Cum Laude</span>
+                      <span>1.00 – 1.20</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Magna Cum Laude</span>
+                      <span>1.21 – 1.45</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Cum Laude</span>
+                      <span>1.46 – 1.75</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <p className="text-sm text-center mb-5">Eligible for <span className="font-bold font-mono text-[1rem] ml-1">Magna Cum Laude</span></p>
-          </div>
+            {/* LICENSE */}
+            <div className="border-t border-t-gray-200 my-5 pt-5">
+              <p className="text-xs text-center text-gray-500">Generated with</p>
+              <div className="grid grid-cols-2 items-center gap-70">
+                <div className="flex flex-col items-start">
+                  <div className="flex flex-row items-center">
+                    <img src={logo} alt="Echo Logo" className="w-7 h-7 rounded mr-1" loading="lazy"/>
+                    <p className="font-mono text-[#232323] mt-1 text-[1.2rem]">Echo</p>
+                  </div>
+                  <p className="text-xs font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-mono font-medium text-sm">{formattedDate}</p>
+                  <p className="font-mono text-gray-500 text-xs">{time24}</p>
+                </div>
+              </div>
+            </div>
             
+          </div>
+          
             {subjects.length > 0 && (
               <div className="text-center my-5">
                 <Button onClick={() => handleDownload()} disabled={downloading}>
-                  <span className={`border border-gray-200 text-sm font-mono mt-0.5 font-semibold bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download"}</span>
+                  <span className={`border border-gray-200 text-sm font-mono mt-0.5 font-semibold bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
                 </Button>
               </div>
             )}
