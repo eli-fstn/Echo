@@ -4,7 +4,6 @@ import SubjectCard from "../components/ui/SubjectCard";
 import Button from "../components/ui/Button";
 import Footer from "../components/layout/Footer.tsx";
 import logo from "../assets/Echo-Logo.png";
-import { lazy } from "react";
 import { calculateGWA, calculateWeightedGrade, TotalUnits, TotalWeighted, LatinHonor } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 import TypingText from "../components/ui/TypingText.tsx";
@@ -51,7 +50,7 @@ function Dashboard() {
 
   const handleDownload = async () => {
     const { toPng } = await import("html-to-image"); 
-    
+
     if (!scheduleRef.current) return;
     setDownloading(true);
 
