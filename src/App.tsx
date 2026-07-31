@@ -1,7 +1,9 @@
-import Dashboard from './pages/Dashboard'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NotFound from './pages/errors/NotFound';
+import { lazy } from 'react';
+
+const Dashboard = lazy(() => import("../src/pages/Dashboard"));
+const NotFound = lazy(() => import("../src/pages/errors/NotFound"));
 
 function App() {
   return (

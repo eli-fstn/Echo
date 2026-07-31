@@ -10,7 +10,7 @@ function Footer() {
     <div className="bg-[#232323] mt-auto h-60 w-full flex flex-col">
       <div className="flex-1 py-10 px-50">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="Echo Logo" className="w-10 h-10 rounded" />
+          <img src={logo} alt="Echo Logo" className="w-10 h-10 rounded" loading="lazy"/>
           <p className="font-mono text-white mt-1 text-[1.7rem]">Echo</p>
         </div>
 
@@ -18,9 +18,7 @@ function Footer() {
       </div>
 
       <div className="pb-3">
-        <p className="text-white text-center text-xs">
-          &copy; {currentYear} Echo - GWA Calculator. Developed for academic purposes.
-        </p>
+        <p className="text-white text-center text-xs">&copy; {currentYear} Echo - GWA Calculator. Developed for academic purposes.</p>
       </div>
     </div>
   )
