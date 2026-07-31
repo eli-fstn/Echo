@@ -1,10 +1,11 @@
 # Echo
 
+**Echo** is a client-side web application for calculating a student's General Weighted Average (GWA) from subject grades and units. It provides a lightweight workflow for entering academic data, reviewing weighted totals, and exporting a summary report as a PNG image.
+
 [![Status](https://img.shields.io/badge/Status-Deployed-00C853)](https://example.com)
 [![Audience](https://img.shields.io/badge/Audience-Section--Based-purple)](https://example.com)
 [![Platform](https://img.shields.io/badge/Type-Web%20Application-blue)](https://example.com)
 
-Echo is a client-side web application for calculating a student's General Weighted Average (GWA) from subject grades and units. It provides a lightweight workflow for entering academic data, reviewing weighted totals, and exporting a summary report as a PNG image.
 
 ## Overview
 
@@ -20,21 +21,23 @@ Echo is built as a single-page React application with TypeScript and Vite. The a
 - Show inline validation errors when required fields are left empty
 - Provide a simple routing structure with a dedicated not-found page
 
-## Screenshots
-
-Screenshots will be added to the repository once visual assets are available. The current interface is designed around the calculator form and generated summary report.
-
 ## Technology Stack
 
-- React 19
-- TypeScript
-- Vite 8
-- React Router DOM
-- Tailwind CSS
-- html-to-image for report export
-- @iconify/react for icons
-- Vercel Analytics and Speed Insights
-- ESLint with TypeScript ESLint
+| Layer | Technology | Version |
+|-------|------------|:-------:|
+| Frontend | React | ^19.2.7 |
+| Frontend | React DOM | ^19.2.7 |
+| Routing | React Router DOM | ^7.18.2 |
+| Language | TypeScript | ~6.0.2 |
+| Build Tool | Vite | ^8.1.1 |
+| Styling | Tailwind CSS | ^4.3.3 |
+| Styling | Tailwind Vite Plugin | ^4.3.3 |
+| Image Export | html-to-image | ^1.11.13 |
+| Icons | @iconify/react | ^6.0.2 |
+| Analytics | Vercel Analytics | ^2.0.1 |
+| Performance | Vercel Speed Insights | ^2.0.0 |
+| Linting | ESLint | ^10.6.0 |
+| Linting | TypeScript ESLint | ^8.62.0 |
 
 ## Folder Structure
 
