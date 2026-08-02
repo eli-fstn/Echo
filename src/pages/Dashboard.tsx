@@ -7,6 +7,7 @@ import logo from "../assets/Echo-Logo.png";
 import { calculateGWA, calculateWeightedGrade, TotalUnits, TotalWeighted, LatinHonor } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 import TypingText from "../components/ui/TypingText.tsx";
+// import RestrictionCard from "../components/ui/RestrictionCard.tsx";
 
 function Dashboard() {
   const [downloading, setDownloading] = useState<boolean>(false);
@@ -123,6 +124,17 @@ function Dashboard() {
           <Button onClick={calculateGrades}>
             <span className="font-mono pt-1.5 pb-1 px-3 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Calculate GWA</span>
           </Button>
+        </div>
+      </div>
+
+      {/* RESTRICTION CARD */}
+      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
+        <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Restrictions (Optional)</p>
+
+        <div className="">
+          {/* <RestrictionCard 
+
+          /> */}
         </div>
       </div>
       
