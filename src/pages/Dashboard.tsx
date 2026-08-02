@@ -132,9 +132,9 @@ function Dashboard() {
         <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Restrictions (Optional)</p>
 
         <div className="">
-          <RestrictionCard 
+          {/* <RestrictionCard 
 
-          />
+          /> */}
         </div>
       </div>
       
