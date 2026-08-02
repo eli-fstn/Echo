@@ -7,7 +7,7 @@ import logo from "../assets/Echo-Logo.png";
 import { calculateGWA, calculateWeightedGrade, TotalUnits, TotalWeighted, LatinHonor } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 import TypingText from "../components/ui/TypingText.tsx";
-import RestrictionCard from "../components/ui/RestrictionCard.tsx";
+// import RestrictionCard from "../components/ui/RestrictionCard.tsx";
 
 function Dashboard() {
   const [downloading, setDownloading] = useState<boolean>(false);
