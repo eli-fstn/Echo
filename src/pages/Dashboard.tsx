@@ -106,7 +106,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex flex-col">
+    <div className="bg-[#FBF8F3] min-h-screen flex flex-col" id="dashboard">
       <Navbar />
 
       <TypingText text="Know where your GWA is headed." speed={50} />
@@ -159,7 +159,7 @@ function Dashboard() {
 
             {gwa !== null && (
               <p className={`text-sm text-center mt-3 ${isDisqualified ? "text-red-500" : ""}`}>
-                <span className="font-bold font-mono text-sm ml-1">
+                <span className="font-mono text-sm ml-1">
                   {honorResult}
                 </span>
               </p>
