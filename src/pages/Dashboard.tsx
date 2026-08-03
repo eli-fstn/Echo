@@ -7,7 +7,7 @@ import logo from "../assets/Echo-Logo.png";
 import { calculateGWA, calculateWeightedGrade, TotalUnits, TotalWeighted, LatinHonor } from "../utils/calculateGwa.ts";
 import type { Subject } from "../utils/calculateGwa.ts";
 import TypingText from "../components/ui/TypingText.tsx";
-// import RestrictionCard from "../components/ui/RestrictionCard.tsx";
+import RestrictionCard from "../components/ui/RestrictionCard.tsx";
 
 function Dashboard() {
   const [downloading, setDownloading] = useState<boolean>(false);
@@ -18,6 +18,19 @@ function Dashboard() {
   const [subjects, setSubjects] = useState<Subject[]>([
     { id: crypto.randomUUID(), subjectName: "", grade: "", units: "" },
   ]);
+  const [restrictions, setRestrictions] = useState({
+    maxGwaForCumLaude: "1.75",
+    maxGwaForMagna: "1.45",
+    maxGwaForSumma: "1.20",
+    minGradeForCumLaude: "",
+    minGradeForMagna: "",
+    minGradeForSumma: "",
+    noFailedGrades: false,
+  });
+  const [confirmedRestrictions, setConfirmedRestrictions] = useState(restrictions);
+  const [, setRestrictionsConfirmed] = useState(false);
+  const honorResult = LatinHonor(parseFloat(gwa ?? ""), reportSubjects, confirmedRestrictions);
+  const isDisqualified = honorResult.startsWith("Not eligible");
 
   const addSubject = () => {
     setSubjects((prev) => [...prev, { id: crypto.randomUUID(), subjectName: "", grade: "", units: "" }]);
@@ -87,6 +100,11 @@ function Dashboard() {
     second: '2-digit'
   });
 
+  const updateRestrictions = () => {
+    setConfirmedRestrictions(restrictions);
+    setRestrictionsConfirmed(true);
+  };
+
   return (
     <div className="bg-[#FBF8F3] min-h-screen flex flex-col">
       <Navbar />
@@ -95,7 +113,7 @@ function Dashboard() {
 
       {/* CARD */}
       <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
-        <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Calculate your grades</p>
+        <p className="bg-[#232323] font-semibold text-sm w-full text-white  px-3 py-1">Calculate your grades</p>
 
         <div className="px-5 mt-5 flex flex-col gap-3">
           {subjects.map((s, index) => (
@@ -126,21 +144,10 @@ function Dashboard() {
           </Button>
         </div>
       </div>
-
-      {/* RESTRICTION CARD */}
-      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
-        <p className="bg-[#232323] text-sm w-full text-white font-semibold px-3 py-1">Restrictions (Optional)</p>
-
-        <div className="">
-          {/* <RestrictionCard 
-
-          /> */}
-        </div>
-      </div>
       
       {/* SUMMARY REPORT */}
       {gwa !== null && (
-        <div  className="bg-white mb-20 shadow w-198.5 mx-auto rounded">
+        <div  className="bg-white mb-10 shadow w-198.5 mx-auto rounded">
           <div ref={scheduleRef} className={`bg-white py-3 px-5 `}>
 
             <p className="font-bold text-[1.3rem] text-center mt-3">GWA Summary Report</p>
@@ -150,8 +157,12 @@ function Dashboard() {
               <p className="font-mono text-[2rem] font-bold">{gwa}</p>
             </div>
 
-            {gwa !== null && parseFloat(gwa) <= 1.75 && (
-              <p className="text-sm text-center mt-3">Eligible for <span className="font-bold font-mono text-[1rem] ml-1">{gwa && LatinHonor(parseFloat(gwa))}</span></p>
+            {gwa !== null && (
+              <p className={`text-sm text-center mt-3 ${isDisqualified ? "text-red-500" : ""}`}>
+                <span className="font-bold font-mono text-sm ml-1">
+                  {honorResult}
+                </span>
+              </p>
             )}
 
             {/* TABLE */}
@@ -177,25 +188,28 @@ function Dashboard() {
             </table>
 
             {/* DETAILS */}
-            <div className="border-t border-t-gray-200 mt-5 pt-5 grid grid-cols-2 gap-6 items-start">
+            <div className="border-t border-t-gray-200 mt-5 pt-5 grid grid-cols-2 gap-3 items-start">
+
+              {/* TOP LEFT — Summary */}
               <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
                 <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Summary</p>
-                <div className="flex flex-col gap-2 font-mono text-sm">
+                <div className="flex flex-col gap-1 font-mono text-xs">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-500 text-xs">Total Subjects</span>
-                    <span className="font-semibold">{reportSubjects.length}</span>
+                    <span>{reportSubjects.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-500 text-xs">Total Units</span>
-                    <span className="font-semibold">{TotalUnits(reportSubjects)}</span>
+                    <span>{TotalUnits(reportSubjects)}</span>
                   </div>
-                  <div className="flex justify-between items-center border-t border-gray-200 pt-2 mt-1">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-500 text-xs">Total Weighted</span>
-                    <span className="font-semibold">{TotalWeighted(reportSubjects)}</span>
+                    <span>{TotalWeighted(reportSubjects)}</span>
                   </div>
                 </div>
               </div>
 
+              {/* TOP RIGHT — How this was calculated */}
               <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
                 <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">How this was calculated</p>
                 <div className="font-mono text-xs text-gray-600 flex flex-col gap-1">
@@ -203,22 +217,44 @@ function Dashboard() {
                   <p>= {TotalWeighted(reportSubjects)} ÷ {TotalUnits(reportSubjects)}</p>
                   <p className="font-bold text-gray-800">= {gwa}</p>
                 </div>
+              </div>
 
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-2">Latin Honor Qualifications</p>
+              {/* BOTTOM LEFT — Lowest Allowable Grade (conditional) */}
+              {[confirmedRestrictions.minGradeForSumma, confirmedRestrictions.minGradeForMagna, confirmedRestrictions.minGradeForCumLaude].some((v) => v.trim() !== "") && (
+                <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Lowest Allowable Grade</p>
                   <div className="flex flex-col gap-1 font-mono text-xs">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Summa Cum Laude</span>
-                      <span>1.00 – 1.20</span>
+                      <span>{confirmedRestrictions.minGradeForSumma}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Magna Cum Laude</span>
-                      <span>1.21 – 1.45</span>
+                      <span>{confirmedRestrictions.minGradeForMagna}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Cum Laude</span>
-                      <span>1.46 – 1.75</span>
+                      <span>{confirmedRestrictions.minGradeForCumLaude}</span>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* BOTTOM RIGHT — Latin Honor Qualifications */}
+              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Latin Honor Qualifications</p>
+                <div className="flex flex-col gap-1 font-mono text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Summa Cum Laude</span>
+                    <span>1.00 – {confirmedRestrictions.maxGwaForSumma}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Magna Cum Laude</span>
+                    <span>{(parseFloat(confirmedRestrictions.maxGwaForSumma) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForMagna}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Cum Laude</span>
+                    <span>{(parseFloat(confirmedRestrictions.maxGwaForMagna) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForCumLaude}</span>
                   </div>
                 </div>
               </div>
@@ -247,12 +283,42 @@ function Dashboard() {
             {subjects.length > 0 && (
               <div className="text-center my-5">
                 <Button onClick={() => handleDownload()} disabled={downloading}>
-                  <span className={`border border-gray-200 text-sm font-mono mt-0.5 font-semibold bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
+                  <span className={`border border-gray-200 text-sm font-mono mt-0.5  bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
                 </Button>
               </div>
             )}
         </div>
       )}
+
+      {/* RESTRICTION CARD */}
+      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
+        <p className="bg-[#232323] font-semibold text-sm w-full text-white px-3 py-1">Restrictions (Optional)</p>
+
+        <div className="">
+          <RestrictionCard
+              maxGwaForCumLaude={restrictions.maxGwaForCumLaude}
+              maxGwaForMagna={restrictions.maxGwaForMagna}
+              maxGwaForSumma={restrictions.maxGwaForSumma}
+              minGradeForCumLaude={restrictions.minGradeForCumLaude}
+              minGradeForMagna={restrictions.minGradeForMagna}
+              minGradeForSumma={restrictions.minGradeForSumma}
+              noFailedGrades={restrictions.noFailedGrades}
+              onMaxGwaForCumLaudeChange={(v) => setRestrictions((prev) => ({ ...prev, maxGwaForCumLaude: v }))}
+              onMaxGwaForMagnaChange={(v) => setRestrictions((prev) => ({ ...prev, maxGwaForMagna: v }))}
+              onMaxGwaForSummaChange={(v) => setRestrictions((prev) => ({ ...prev, maxGwaForSumma: v }))}
+              onMinGradeForCumLaudeChange={(v) => setRestrictions((prev) => ({ ...prev, minGradeForCumLaude: v }))}
+              onMinGradeForMagnaChange={(v) => setRestrictions((prev) => ({ ...prev, minGradeForMagna: v }))}
+              onMinGradeForSummaChange={(v) => setRestrictions((prev) => ({ ...prev, minGradeForSumma: v }))}
+              onNoFailedGradesChange={(v) => setRestrictions((prev) => ({ ...prev, noFailedGrades: v }))}
+            />
+        </div>
+
+        <div className="my-3 flex flex-row gap-3">
+          <Button onClick={updateRestrictions}>
+            <span className="font-mono pt-1.5 pb-1 px-3 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Confirm</span>
+          </Button>
+        </div>
+      </div>
 
       <Footer />
     </div>
