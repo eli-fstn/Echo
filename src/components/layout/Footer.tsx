@@ -11,7 +11,7 @@ function Footer() {
       <div className="flex-1 py-10 px-50">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Echo Logo" className="w-10 h-10 rounded" loading="lazy"/>
-          <p className="font-mono text-white mt-1 text-[1.7rem]">Echo</p>
+          <p className="font-mono text-white text-[1.7rem]">Echo</p>
         </div>
 
         <p className="text-white/80 text-sm mt-5 w-100">A simple academic tool designed to help students calculate and predict their General Weighted Average with confidence.</p>
