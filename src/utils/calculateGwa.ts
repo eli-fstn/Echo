@@ -5,6 +5,18 @@ export interface Subject {
   units: string;
 }
 
+interface Restrictions {
+  maxGwaForCumLaude: string;
+  maxGwaForMagna: string;
+  maxGwaForSumma: string;
+
+  minGradeForCumLaude: string;
+  minGradeForMagna: string;
+  minGradeForSumma: string;
+
+  noFailedGrades: boolean
+}
+
 export function calculateWeightedGrade(subject: Subject): string {
   const grade = parseFloat(subject.grade);
   const units = parseFloat(subject.units);
@@ -48,12 +60,48 @@ export function TotalWeighted(subjects: Subject[]): number {
   }, 0);
 }
 
-export function LatinHonor(gwa: number) {
-  if (gwa >= 1.00 && gwa <= 1.20) {
-    return "Summa Cum Laude";
-  } else if (gwa >= 1.21 && gwa <= 1.45) {
-    return "Magna Cum Laude";
-  } else if (gwa >= 1.46 && gwa <= 1.75) {
-    return "Cum Laude";
+export function LatinHonor(gwa: number, subjects:Subject[], restrictions:Restrictions): string {
+
+  const isFailed = (grade: string) => {
+    const numeric = parseFloat(grade);
+    return !isNaN(numeric) && numeric === 5.00;
+  }
+
+  for (const subject of subjects){
+    if (restrictions.noFailedGrades && isFailed(subject.grade)) {
+      return `Not eligible for Latin Honor because ${subject.subjectName} has a failing grade.`;
+    }
+  }
+
+  const hasGradeAboveLimit = (subjects: Subject[], limit: string): boolean => {
+    const limitValue = parseFloat(limit);
+    if (isNaN(limitValue)) return false;
+
+    return subjects.some((s) => {
+      const grade = parseFloat(s.grade);
+      return !isNaN(grade) && grade > limitValue;
+    });
+  };
+
+  if (gwa >= 1.00 && gwa <= parseFloat(restrictions.maxGwaForSumma)) {
+    if (hasGradeAboveLimit(subjects, restrictions.minGradeForSumma)) {
+      return "Not eligible for Summa Cum Laude due to a subject grade exceeding the allowed limit.";
+    }
+    return "Eligible for Summa Cum Laude";
+  }
+  else if (gwa > parseFloat(restrictions.maxGwaForSumma) && gwa <= parseFloat(restrictions.maxGwaForMagna)) {
+    if (hasGradeAboveLimit(subjects, restrictions.minGradeForMagna)) {
+      return "Not eligible for Magna Cum Laude due to a subject grade exceeding the allowed limit.";
+    }
+    return "Eligible for Magna Cum Laude";
+  }
+  else if (gwa > parseFloat(restrictions.maxGwaForMagna) && gwa <= parseFloat(restrictions.maxGwaForCumLaude)) {
+    if (hasGradeAboveLimit(subjects, restrictions.minGradeForCumLaude)) {
+      return "Not eligible for Cum Laude due to a subject grade exceeding the allowed limit.";
+    }
+    return "Eligible for Cum Laude";
+  }
+  else {
+    return "Not eligible for any Latin Honor.";
   }
 }
