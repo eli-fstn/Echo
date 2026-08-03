@@ -16,10 +16,8 @@ interface RestrictionCardProps {
   onMinGradeForSummaChange: (value: string) => void;
 
   noFailedGrades?: boolean;
-  noINCGrades?: boolean;
 
   onNoFailedGradesChange: (value: boolean) => void;
-  onNoINCGradesChange: (value: boolean) => void;
 }
 
 function RestrictionCard(
@@ -27,7 +25,7 @@ function RestrictionCard(
     minGradeForCumLaude, minGradeForMagna, minGradeForSumma,
     onMaxGwaForCumLaudeChange, onMaxGwaForMagnaChange, onMaxGwaForSummaChange,
     onMinGradeForCumLaudeChange, onMinGradeForMagnaChange, onMinGradeForSummaChange,
-    noFailedGrades, noINCGrades, onNoFailedGradesChange, onNoINCGradesChange
+    noFailedGrades, onNoFailedGradesChange,
    }: RestrictionCardProps
 ) {
 
@@ -50,7 +48,7 @@ function RestrictionCard(
       label: "Maximum GWA",
       value: maxGwaForMagna,
       onChange: onMaxGwaForMagnaChange,
-      placeholder: "1.75",
+      placeholder: "1.45",
     },
     {
       label: "Lowest Allowable Grade",
@@ -64,7 +62,7 @@ function RestrictionCard(
       label: "Maximum GWA",
       value: maxGwaForSumma,
       onChange: onMaxGwaForSummaChange,
-      placeholder: "1.75",
+      placeholder: "1.20",
     },
     {
       label: "Lowest Allowable Grade",
@@ -145,30 +143,21 @@ function RestrictionCard(
             </div>
           ))}
         </div>
-
-        {/* CHECKBOXES */}
-        <div className="p-3 border border-gray-100 rounded-md shadow-sm">
+      </div>
+      
+      {/* CHECKBOXES */}
+        <div className="p-3 border border-gray-100 rounded-md shadow-sm mt-5">
           <p className="font-mono text-sm">Additional Requirements</p>
           <div className="flex my-3">
             <input 
               type="checkbox"
               checked={noFailedGrades}
               onChange={(e) => onNoFailedGradesChange(e.target.checked)}
-              className="text-xs border border-gray-300 px-2 py-1 rounded outline-none focus:border-[#232323]"
+              className="text-xs border border-gray-300 px-2 py-1 rounded outline-none focus:border-[#232323] cursor-pointer accent-[#232323]"
             />
             <label className="text-xs font-mono text-gray-500 font-medium ml-1.5 mt-0.5">No Failing Grades</label>
           </div>
-          <div className="flex">
-            <input 
-              type="checkbox"
-              checked={noINCGrades}
-              onChange={(e) => onNoINCGradesChange(e.target.checked)}
-              className="text-xs border border-gray-300 px-2 py-1 rounded outline-none focus:border-[#232323]"
-            />
-            <label className="text-xs font-mono text-gray-500 font-medium ml-1.5 mt-0.5">No INC Grades</label>
-          </div>
         </div>
-      </div>
     </div>
   )
 }
