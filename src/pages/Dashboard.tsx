@@ -136,11 +136,11 @@ function Dashboard() {
 
         <div className="my-3 flex flex-row gap-3">
           <Button onClick={addSubject}>
-            <span className="font-mono pt-1.5 pb-1 px-3 rounded text-xs text-[#232323] border border-[#232323] hover:bg-[#232323] hover:text-white transition duration-200">+ Add Subject</span>
+            <span className="font-mono px-3 py-1 rounded text-xs text-[#232323] border border-[#232323] hover:bg-[#232323] hover:text-white transition duration-200">+ Add Subject</span>
           </Button>
 
           <Button onClick={calculateGrades}>
-            <span className="font-mono pt-1.5 pb-1 px-3 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Calculate GWA</span>
+            <span className="font-mono px-3 py-1 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Calculate GWA</span>
           </Button>
         </div>
       </div>
@@ -178,10 +178,10 @@ function Dashboard() {
               <tbody>
                 {reportSubjects.map((s) => (
                   <tr key={s.id} className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] gap-5 py-2 mx-3 border-b border-b-gray-100">
-                    <td className="text-xs font-mono mt-0.5 truncate">{s.subjectName}</td>
-                    <td className="text-xs font-mono mt-0.5">{s.grade}</td>
-                    <td className="text-xs font-mono mt-0.5">{s.units}</td>
-                    <td className="text-xs font-mono mt-0.5">{calculateWeightedGrade(s)}</td>
+                    <td className="text-xs font-mono truncate">{s.subjectName}</td>
+                    <td className="text-xs font-mono">{s.grade}</td>
+                    <td className="text-xs font-mono">{s.units}</td>
+                    <td className="text-xs font-mono">{calculateWeightedGrade(s)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -283,7 +283,7 @@ function Dashboard() {
             {subjects.length > 0 && (
               <div className="text-center my-5">
                 <Button onClick={() => handleDownload()} disabled={downloading}>
-                  <span className={`border border-gray-200 text-sm font-mono mt-0.5  bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
+                  <span className={`border border-gray-200 text-sm font-mono  bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
                 </Button>
               </div>
             )}
@@ -315,7 +315,7 @@ function Dashboard() {
 
         <div className="my-3 flex flex-row gap-3">
           <Button onClick={updateRestrictions}>
-            <span className="font-mono pt-1.5 pb-1 px-3 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Confirm</span>
+            <span className="font-mono px-3 py-1 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Confirm</span>
           </Button>
         </div>
       </div>

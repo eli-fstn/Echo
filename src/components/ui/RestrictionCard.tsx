@@ -155,7 +155,7 @@ function RestrictionCard(
               onChange={(e) => onNoFailedGradesChange(e.target.checked)}
               className="text-xs border border-gray-300 px-2 py-1 rounded outline-none focus:border-[#232323] cursor-pointer accent-[#232323]"
             />
-            <label className="text-xs font-mono text-gray-500 font-medium ml-1.5 mt-0.5">No Failing Grades</label>
+            <label className="text-xs font-mono text-gray-500 font-medium ml-1.5">No Failing Grades</label>
           </div>
         </div>
     </div>
