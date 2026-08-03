@@ -106,7 +106,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="bg-[#FBF8F3] min-h-screen flex flex-col">
+    <div className="bg-[#FBF8F3] min-h-screen flex flex-col" id="dashboard">
       <Navbar />
 
       <TypingText text="Know where your GWA is headed." speed={50} />

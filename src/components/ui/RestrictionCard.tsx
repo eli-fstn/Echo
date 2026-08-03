@@ -79,12 +79,12 @@ function RestrictionCard(
 
       <div className="grid grid-cols-3 gap-5 mt-5">
         {/* LEFT GRID */}
-        <div className="p-3 border border-gray-100 rounded-md shadow-sm">
-          <p className="font-mono text-sm">Cum Laude</p>
+        <div className="px-5 pt-3 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
+          <p className="font-mono text-sm font-bold">Cum Laude</p>
 
           {cumLaude.map((field) => (
             <div key={field.label} className="flex flex-col my-4">
-              <label className="text-xs font-mono text-gray-500 font-medium">{field.label}</label>
+              <label className="text-xs font-mono text-gray-500 font-medium mb-1">{field.label}</label>
 
               <input
                 type="number"
@@ -101,12 +101,12 @@ function RestrictionCard(
         </div>
 
         {/* MIDDLE GRID */}
-        <div className="p-3 border border-gray-100 rounded-md shadow-sm">
-          <p className="font-mono text-sm">Magna Cum Laude</p>
+        <div className="px-5 pt-3 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
+          <p className="font-mono text-sm font-bold">Magna Cum Laude</p>
 
           {magnaCumLaude.map((field) => (
             <div key={field.label} className="flex flex-col my-4">
-              <label className="text-xs font-mono text-gray-500 font-medium">{field.label}</label>
+              <label className="text-xs font-mono text-gray-500 font-medium mb-1">{field.label}</label>
 
               <input
                 type="number"
@@ -123,12 +123,12 @@ function RestrictionCard(
         </div>
 
         {/* RIGHT GRID */}
-        <div className="p-3 border border-gray-100 rounded-md shadow-sm">
-          <p className="font-mono text-sm">Summa Cum Laude</p>
+        <div className="px-5 pt-3 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
+          <p className="font-mono text-sm font-bold">Summa Cum Laude</p>
 
           {summaCumLaude.map((field) => (
             <div key={field.label} className="flex flex-col my-4">
-              <label className="text-xs font-mono text-gray-500 font-medium">{field.label}</label>
+              <label className="text-xs font-mono text-gray-500 font-medium mb-1">{field.label}</label>
 
               <input
                 type="number"
@@ -146,7 +146,7 @@ function RestrictionCard(
       </div>
       
       {/* CHECKBOXES */}
-        <div className="p-3 border border-gray-100 rounded-md shadow-sm mt-5">
+        <div className="p-3 mt-5 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
           <p className="font-mono text-sm">Additional Requirements</p>
           <div className="flex my-3">
             <input 
