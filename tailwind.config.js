@@ -1,3 +1,5 @@
+import { GeistMono } from "geist/font/mono";
+
 export default {
   content: [
     "./index.html",
@@ -6,8 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ["Geist Mono", "monospace"],
-        inter: ["Inter", "sans-serif"],
+        mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
     },
   },
