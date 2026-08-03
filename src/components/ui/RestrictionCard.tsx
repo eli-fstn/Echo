@@ -147,7 +147,7 @@ function RestrictionCard(
       
       {/* CHECKBOXES */}
         <div className="p-3 mt-5 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
-          <p className="font-mono text-sm">Additional Requirements</p>
+          <p className="font-mono text-sm font-bold">Additional Requirements</p>
           <div className="flex my-3">
             <input 
               type="checkbox"
