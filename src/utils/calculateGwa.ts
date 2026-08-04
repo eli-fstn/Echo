@@ -102,6 +102,6 @@ export function LatinHonor(gwa: number, subjects:Subject[], restrictions:Restric
     return "Eligible for Cum Laude";
   }
   else {
-    return "Not eligible for any Latin Honor.";
+    return "Passed but not eligible for any Latin Honor.";
   }
 }
