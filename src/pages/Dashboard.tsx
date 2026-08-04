@@ -11,6 +11,7 @@ import RestrictionCard from "../components/ui/RestrictionCard.tsx";
 
 function Dashboard() {
   const [downloading, setDownloading] = useState<boolean>(false);
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const scheduleRef = useRef<null>(null);
   const [gwa, setGwa] = useState<string | null>(null);
   const [reportSubjects, setReportSubjects] = useState<Subject[]>([]);
@@ -103,6 +104,7 @@ function Dashboard() {
   const updateRestrictions = () => {
     setConfirmedRestrictions(restrictions);
     setRestrictionsConfirmed(true);
+    setIsConfirmed(true);
   };
 
   return (
@@ -159,7 +161,7 @@ function Dashboard() {
 
             {gwa !== null && (
               <p className={`text-sm text-center mt-3 ${isDisqualified ? "text-red-500" : ""}`}>
-                <span className="font-mono text-sm ml-1">
+                <span className="font-mono text-sm">
                   {honorResult}
                 </span>
               </p>
@@ -315,7 +317,7 @@ function Dashboard() {
 
         <div className="my-3 flex flex-row gap-3">
           <Button onClick={updateRestrictions}>
-            <span className="font-mono px-3 py-1 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">Confirm</span>
+            <span className="font-mono px-3 py-1 rounded text-xs text-white border border-[#232323] bg-[#232323] hover:bg-white hover:text-[#232323] transition duration-200">{isConfirmed ? "Confirmed" : "Confirm"}</span>
           </Button>
         </div>
       </div>
