@@ -32,6 +32,9 @@ function Dashboard() {
   const [, setRestrictionsConfirmed] = useState(false);
   const honorResult = LatinHonor(parseFloat(gwa ?? ""), reportSubjects, confirmedRestrictions);
   const isDisqualified = honorResult.startsWith("Not eligible");
+  const isPassing = honorResult.startsWith("Passing");
+  const isBelowPassing = honorResult.startsWith("Below passing");
+  const isFailed = honorResult.startsWith("Failed");
 
   const addSubject = () => {
     setSubjects((prev) => [...prev, { id: crypto.randomUUID(), subjectName: "", grade: "", units: "" }]);
@@ -157,14 +160,12 @@ function Dashboard() {
 
               <div className="mt-3 flex flex-col text-center">
                 <p className="text-xs">Your GWA:</p>
-                <p className="font-mono text-[2rem] font-bold">{gwa}</p>
+                <p className={`font-mono text-[2rem] font-bold ${parseFloat(gwa) >= 4  ? "text-red-500" : parseFloat(gwa) >= 3 ? "text-amber-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForCumLaude) ? "text-green-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForMagna) ? "text-cyan-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForSumma) ? "text-blue-500" : parseFloat(gwa) >= 1 ? "text-purple-500" : ""}`}>{gwa}</p>
               </div>
 
               {gwa !== null && (
-                <p className={`text-sm text-center mt-3 ${isDisqualified ? "text-red-500" : ""}`}>
-                  <span className="font-mono text-sm">
-                    {honorResult}
-                  </span>
+                <p className={`text-xs font-semibold font-mono w-fit mx-auto border px-4 py-1 rounded-2xl text-center mt-3 ${isDisqualified || isFailed || isBelowPassing ? "text-red-500 border-red-200 bg-red-50" : isPassing ? "text-amber-500 border-amber-200 bg-amber-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForCumLaude) ? "text-green-500 border-green-200 bg-green-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForMagna) ? "text-cyan-500 border-cyan-200 bg-cyan-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForSumma) ? "text-blue-500 border-blue-200 bg-blue-50" : parseFloat(gwa) >= 1 ? "text-purple-500 border-purple-200 bg-purple-50" : ""}`}>
+                  {honorResult}
                 </p>
               )}
 

@@ -69,6 +69,10 @@ export function LatinHonor(gwa: number, subjects:Subject[], restrictions:Restric
 
   for (const subject of subjects){
     if (restrictions.noFailedGrades && isFailed(subject.grade)) {
+
+      if (!subject.subjectName.trim()) {
+        return "Not eligible for Latin Honor because --- has a failing grade.";
+      }
       return `Not eligible for Latin Honor because ${subject.subjectName} has a failing grade.`;
     }
   }
@@ -85,23 +89,32 @@ export function LatinHonor(gwa: number, subjects:Subject[], restrictions:Restric
 
   if (gwa >= 1.00 && gwa <= parseFloat(restrictions.maxGwaForSumma)) {
     if (hasGradeAboveLimit(subjects, restrictions.minGradeForSumma)) {
-      return "Not eligible for Summa Cum Laude due to a subject grade exceeding the allowed limit.";
+      return "Not eligible for Summa Cum Laude due to a subject grade exceeding the allowed limit";
     }
     return "Eligible for Summa Cum Laude";
   }
   else if (gwa > parseFloat(restrictions.maxGwaForSumma) && gwa <= parseFloat(restrictions.maxGwaForMagna)) {
     if (hasGradeAboveLimit(subjects, restrictions.minGradeForMagna)) {
-      return "Not eligible for Magna Cum Laude due to a subject grade exceeding the allowed limit.";
+      return "Not eligible for Magna Cum Laude due to a subject grade exceeding the allowed limit";
     }
     return "Eligible for Magna Cum Laude";
   }
   else if (gwa > parseFloat(restrictions.maxGwaForMagna) && gwa <= parseFloat(restrictions.maxGwaForCumLaude)) {
     if (hasGradeAboveLimit(subjects, restrictions.minGradeForCumLaude)) {
-      return "Not eligible for Cum Laude due to a subject grade exceeding the allowed limit.";
+      return "Not eligible for Cum Laude due to a subject grade exceeding the allowed limit";
     }
     return "Eligible for Cum Laude";
   }
+  else if (gwa >= 5) {
+    return "Failed";
+  }
+  else if (gwa >= 4) {
+    return "Below passing";
+  }
+  else if (gwa >= 3) {
+    return "Passing"
+  } 
   else {
-    return "Passed but not eligible for any Latin Honor.";
+    return "Passed";
   }
 }

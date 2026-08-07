@@ -74,13 +74,13 @@ function RestrictionCard(
   return (
     <div className="p-4 sm:p-5">
 
-      <p>Academic Policy</p>
+      <p className="font-bold">Academic Policy</p>
       <p className="text-gray-500 text-xs">Configure the academic policy used to determine Latin Honor eligibility.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5">
         {/* LEFT GRID */}
         <div className="px-5 pt-3 pb-4 sm:pb-0 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
-          <p className="font-mono text-sm font-bold sm:mb-3">Cum Laude</p>
+          <p className="font-mono text-sm font-semibold sm:mb-3">Cum Laude</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-0 my-2 sm:my-0">
             {cumLaude.map((field) => (
@@ -104,7 +104,7 @@ function RestrictionCard(
 
         {/* MIDDLE GRID */}
         <div className="px-5 pt-3 pb-4 sm:pb-0 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
-          <p className="font-mono text-sm font-bold sm:mb-3">Magna Cum Laude</p>
+          <p className="font-mono text-sm font-semibold sm:mb-3">Magna Cum Laude</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-0 my-2 sm:my-0">
             {magnaCumLaude.map((field) => (
@@ -128,7 +128,7 @@ function RestrictionCard(
 
         {/* RIGHT GRID */}
         <div className="px-5 pt-3 pb-4 sm:pb-0 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
-          <p className="font-mono text-sm font-bold sm:mb-3">Summa Cum Laude</p>
+          <p className="font-mono text-sm font-semibold  sm:mb-3">Summa Cum Laude</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-0 my-2 sm:my-0">
             {summaCumLaude.map((field) => (
@@ -153,7 +153,7 @@ function RestrictionCard(
       
       {/* CHECKBOXES */}
         <div className="p-3 mt-5 border border-gray-200 rounded-md shadow hover:shadow-md hover:-translate-y-1 transition duration-200">
-          <p className="font-mono text-sm font-bold">Additional Requirements</p>
+          <p className="font-mono text-sm font-semibold">Additional Requirements</p>
           <div className="flex my-3">
             <input 
               type="checkbox"
