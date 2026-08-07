@@ -32,6 +32,9 @@ function Dashboard() {
   const [, setRestrictionsConfirmed] = useState(false);
   const honorResult = LatinHonor(parseFloat(gwa ?? ""), reportSubjects, confirmedRestrictions);
   const isDisqualified = honorResult.startsWith("Not eligible");
+  const isPassing = honorResult.startsWith("Passing");
+  const isBelowPassing = honorResult.startsWith("Below passing");
+  const isFailed = honorResult.startsWith("Failed");
 
   const addSubject = () => {
     setSubjects((prev) => [...prev, { id: crypto.randomUUID(), subjectName: "", grade: "", units: "" }]);
@@ -64,7 +67,7 @@ function Dashboard() {
   };
 
   const handleDownload = async () => {
-    const { toPng } = await import("html-to-image"); 
+    const { toPng } = await import("html-to-image");
 
     if (!scheduleRef.current) return;
     setDownloading(true);
@@ -114,10 +117,10 @@ function Dashboard() {
       <TypingText text="Know where your GWA is headed." speed={50} />
 
       {/* CARD */}
-      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
-        <p className="bg-[#232323] font-semibold text-sm w-full text-white  px-3 py-1">Calculate your grades</p>
+      <div className="bg-white flex-col flex justify-center items-center w-[calc(100%-2rem)] sm:w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
+        <p className="bg-[#232323] font-semibold text-sm w-full text-white px-3 py-1">Calculate your grades</p>
 
-        <div className="px-5 mt-5 flex flex-col gap-3">
+        <div className="px-3 sm:px-5 mt-5 flex flex-col gap-3 w-full">
           {subjects.map((s, index) => (
             <SubjectCard
               key={s.id}
@@ -134,9 +137,9 @@ function Dashboard() {
           ))}
         </div>
 
-        {error && <p className="text-xs text-red-500 text-center mt-2">{error}</p>}
+        {error && <p className="text-xs text-red-500 text-center mt-2 px-3">{error}</p>}
 
-        <div className="my-3 flex flex-row gap-3">
+        <div className="my-3 flex flex-row flex-wrap justify-center gap-3 px-3">
           <Button onClick={addSubject}>
             <span className="font-mono px-3 py-1 rounded text-xs text-[#232323] border border-[#232323] hover:bg-[#232323] hover:text-white transition duration-200">+ Add Subject</span>
           </Button>
@@ -146,157 +149,160 @@ function Dashboard() {
           </Button>
         </div>
       </div>
-      
+
       {/* SUMMARY REPORT */}
       {gwa !== null && (
-        <div  className="bg-white mb-10 shadow w-198.5 mx-auto rounded">
-          <div ref={scheduleRef} className={`bg-white py-3 px-5 `}>
+        <div className="mb-10 mx-auto w-[calc(100%-2rem)] max-w-198.5 overflow-x-auto">
+          <div className="bg-white shadow w-198.5 rounded">
+            <div ref={scheduleRef} className="bg-white py-3 px-5">
 
-            <p className="font-bold text-[1.3rem] text-center mt-3">GWA Summary Report</p>
+              <p className="font-bold text-[1.3rem] text-center mt-3">GWA Summary Report</p>
 
-            <div className="mt-3 flex flex-col text-center">
-              <p className="text-xs">Your GWA:</p>
-              <p className="font-mono text-[2rem] font-bold">{gwa}</p>
-            </div>
+              <div className="mt-3 flex flex-col text-center">
+                <p className="text-xs">Your GWA:</p>
+                <p className={`font-mono text-[2rem] font-bold ${parseFloat(gwa) >= 4  ? "text-red-500" : parseFloat(gwa) >= 3 ? "text-amber-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForCumLaude) ? "text-green-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForMagna) ? "text-cyan-500" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForSumma) ? "text-blue-500" : parseFloat(gwa) >= 1 ? "text-purple-500" : ""}`}>{gwa}</p>
+              </div>
 
-            {gwa !== null && (
-              <p className={`text-sm text-center mt-3 ${isDisqualified ? "text-red-500" : ""}`}>
-                <span className="font-mono text-sm">
+              {gwa !== null && (
+                <p className={`text-xs font-semibold font-mono w-fit mx-auto border px-4 py-1 rounded-2xl text-center mt-3 ${isDisqualified || isFailed || isBelowPassing ? "text-red-500 border-red-200 bg-red-50" : isPassing ? "text-amber-500 border-amber-200 bg-amber-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForCumLaude) ? "text-green-500 border-green-200 bg-green-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForMagna) ? "text-cyan-500 border-cyan-200 bg-cyan-50" : parseFloat(gwa) > parseFloat(confirmedRestrictions.maxGwaForSumma) ? "text-blue-500 border-blue-200 bg-blue-50" : parseFloat(gwa) >= 1 ? "text-purple-500 border-purple-200 bg-purple-50" : ""}`}>
                   {honorResult}
-                </span>
-              </p>
-            )}
+                </p>
+              )}
 
-            {/* TABLE */}
-            <table className="border border-gray-200 w-full mt-5">
-              <thead>
-                <tr className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] text-xs font-bold gap-5 px-3 py-2 text-gray-500 bg-gray-100 tracking-wide uppercase">
-                  <td className="">Subjects</td>
-                  <td className="">Grades</td>
-                  <td className="">Units</td>
-                  <td className="">Weighted</td>
-                </tr>
-              </thead>
-              <tbody>
-                {reportSubjects.map((s) => (
-                  <tr key={s.id} className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] gap-5 py-2 mx-3 border-b border-b-gray-100">
-                    <td className="text-xs font-mono truncate">{s.subjectName}</td>
-                    <td className="text-xs font-mono">{s.grade}</td>
-                    <td className="text-xs font-mono">{s.units}</td>
-                    <td className="text-xs font-mono">{calculateWeightedGrade(s)}</td>
+              {/* TABLE */}
+              <table className="border border-gray-200 w-full mt-5">
+                <thead>
+                  <tr className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] text-xs font-bold gap-5 px-3 py-2 text-gray-500 bg-gray-100 tracking-wide uppercase">
+                    <td className="">Subjects</td>
+                    <td className="">Grades</td>
+                    <td className="">Units</td>
+                    <td className="">Weighted</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {reportSubjects.map((s) => (
+                    <tr key={s.id} className="grid grid-cols-[3fr_.5fr_.5fr_.7fr] gap-5 py-2 mx-3 border-b border-b-gray-100">
+                      <td className="text-xs font-mono truncate">{s.subjectName}</td>
+                      <td className="text-xs font-mono">{s.grade}</td>
+                      <td className="text-xs font-mono">{s.units}</td>
+                      <td className="text-xs font-mono">{calculateWeightedGrade(s)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-            {/* DETAILS */}
-            <div className="border-t border-t-gray-200 mt-5 pt-5 grid grid-cols-2 gap-3 items-start">
+              {/* DETAILS */}
+              <div className="border-t border-t-gray-200 mt-5 pt-5 grid grid-cols-2 gap-3 items-start">
 
-              {/* TOP LEFT — Summary */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
-                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Summary</p>
-                <div className="flex flex-col gap-1 font-mono text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-xs">Total Subjects</span>
-                    <span>{reportSubjects.length}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-xs">Total Units</span>
-                    <span>{TotalUnits(reportSubjects)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-xs">Total Weighted</span>
-                    <span>{TotalWeighted(reportSubjects)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* TOP RIGHT — How this was calculated */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
-                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">How this was calculated</p>
-                <div className="font-mono text-xs text-gray-600 flex flex-col gap-1">
-                  <p>GWA = Σ(Grade × Units) ÷ Σ(Units)</p>
-                  <p>= {TotalWeighted(reportSubjects)} ÷ {TotalUnits(reportSubjects)}</p>
-                  <p className="font-bold text-gray-800">= {gwa}</p>
-                </div>
-              </div>
-
-              {/* BOTTOM LEFT — Lowest Allowable Grade (conditional) */}
-              {[confirmedRestrictions.minGradeForSumma, confirmedRestrictions.minGradeForMagna, confirmedRestrictions.minGradeForCumLaude].some((v) => v.trim() !== "") && (
+                {/* TOP LEFT — Summary */}
                 <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
-                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Lowest Allowable Grade</p>
+                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Summary</p>
+                  <div className="flex flex-col gap-1 font-mono text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500 text-xs">Total Subjects</span>
+                      <span>{reportSubjects.length}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500 text-xs">Total Units</span>
+                      <span>{TotalUnits(reportSubjects)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500 text-xs">Total Weighted</span>
+                      <span>{TotalWeighted(reportSubjects)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TOP RIGHT — How this was calculated */}
+                <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">How this was calculated</p>
+                  <div className="font-mono text-xs text-gray-600 flex flex-col gap-1">
+                    <p>GWA = Σ(Grade × Units) ÷ Σ(Units)</p>
+                    <p>= {TotalWeighted(reportSubjects)} ÷ {TotalUnits(reportSubjects)}</p>
+                    <p className="font-bold text-gray-800">= {gwa}</p>
+                  </div>
+                </div>
+
+                {/* BOTTOM LEFT — Lowest Allowable Grade (conditional) */}
+                {[confirmedRestrictions.minGradeForSumma, confirmedRestrictions.minGradeForMagna, confirmedRestrictions.minGradeForCumLaude].some((v) => v.trim() !== "") && (
+                  <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                    <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Lowest Allowable Grade</p>
+                    <div className="flex flex-col gap-1 font-mono text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Summa Cum Laude</span>
+                        <span>{confirmedRestrictions.minGradeForSumma}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Magna Cum Laude</span>
+                        <span>{confirmedRestrictions.minGradeForMagna}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Cum Laude</span>
+                        <span>{confirmedRestrictions.minGradeForCumLaude}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* BOTTOM RIGHT — Latin Honor Qualifications */}
+                <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
+                  <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Latin Honor Qualifications</p>
                   <div className="flex flex-col gap-1 font-mono text-xs">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Summa Cum Laude</span>
-                      <span>{confirmedRestrictions.minGradeForSumma}</span>
+                      <span>1.00 – {confirmedRestrictions.maxGwaForSumma}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Magna Cum Laude</span>
-                      <span>{confirmedRestrictions.minGradeForMagna}</span>
+                      <span>{(parseFloat(confirmedRestrictions.maxGwaForSumma) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForMagna}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Cum Laude</span>
-                      <span>{confirmedRestrictions.minGradeForCumLaude}</span>
+                      <span>{(parseFloat(confirmedRestrictions.maxGwaForMagna) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForCumLaude}</span>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* BOTTOM RIGHT — Latin Honor Qualifications */}
-              <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/50">
-                <p className="font-bold text-gray-700 uppercase tracking-wide text-[0.7rem] mb-3">Latin Honor Qualifications</p>
-                <div className="flex flex-col gap-1 font-mono text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Summa Cum Laude</span>
-                    <span>1.00 – {confirmedRestrictions.maxGwaForSumma}</span>
+              {/* LICENSE */}
+              <div className="border-t border-t-gray-200 my-5 pt-5">
+                <p className="text-xs text-center text-gray-500">Generated with</p>
+                <div className="grid grid-cols-2 items-center gap-70">
+                  <div className="flex flex-col items-start">
+                    <div className="flex flex-row items-center">
+                      <img src={logo} alt="Echo Logo" className="w-7 h-7 rounded mr-1" loading="lazy"/>
+                      <p className="font-mono text-[#232323] mt-1 text-[1.2rem]">Echo</p>
+                    </div>
+                    <p className="text-xs font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Magna Cum Laude</span>
-                    <span>{(parseFloat(confirmedRestrictions.maxGwaForSumma) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForMagna}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Cum Laude</span>
-                    <span>{(parseFloat(confirmedRestrictions.maxGwaForMagna) + 0.01).toFixed(2)} – {confirmedRestrictions.maxGwaForCumLaude}</span>
+                  <div className="text-right">
+                    <p className="font-mono font-medium text-sm">{formattedDate}</p>
+                    <p className="font-mono text-gray-500 text-xs">{time24}</p>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* LICENSE */}
-            <div className="border-t border-t-gray-200 my-5 pt-5">
-              <p className="text-xs text-center text-gray-500">Generated with</p>
-              <div className="grid grid-cols-2 items-center gap-70">
-                <div className="flex flex-col items-start">
-                  <div className="flex flex-row items-center">
-                    <img src={logo} alt="Echo Logo" className="w-7 h-7 rounded mr-1" loading="lazy"/>
-                    <p className="font-mono text-[#232323] mt-1 text-[1.2rem]">Echo</p>
-                  </div>
-                  <p className="text-xs font-[Amaranth] mt-1 italic">Know where your GWA is headed.</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-mono font-medium text-sm">{formattedDate}</p>
-                  <p className="font-mono text-gray-500 text-xs">{time24}</p>
-                </div>
-              </div>
             </div>
-            
           </div>
-          
-            {subjects.length > 0 && (
-              <div className="text-center my-5">
-                <Button onClick={() => handleDownload()} disabled={downloading}>
-                  <span className={`border border-gray-200 text-sm font-mono  bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100`}>{downloading ? "Downloading..." : "Download Report"}</span>
-                </Button>
-              </div>
-            )}
+
+          {subjects.length > 0 && (
+            <div className="text-center my-5">
+              <Button onClick={() => handleDownload()} disabled={downloading}>
+                <span className="border border-gray-200 text-sm font-mono bg-[#232323] text-white rounded-md shadow px-4 py-1 hover:scale-105 transition-all duration-100">{downloading ? "Downloading..." : "Download Report"}</span>
+              </Button>
+            </div>
+          )}
+          <p className="text-gray-400 text-xs sm:hidden py-3">Swipe sideways to see the full report.</p>
         </div>
       )}
+      
+
 
       {/* RESTRICTION CARD */}
-      <div className="bg-white flex-col flex justify-center items-center w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
+      <div className="bg-white flex-col flex justify-center items-center w-[calc(100%-2rem)] sm:w-fit mx-auto shadow-sm rounded overflow-hidden mb-10">
         <p className="bg-[#232323] font-semibold text-sm w-full text-white px-3 py-1">Restrictions (Optional)</p>
 
-        <div className="">
+        <div className="w-full">
           <RestrictionCard
               maxGwaForCumLaude={restrictions.maxGwaForCumLaude}
               maxGwaForMagna={restrictions.maxGwaForMagna}
