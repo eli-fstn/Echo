@@ -32,7 +32,6 @@ function Dashboard() {
   const [, setRestrictionsConfirmed] = useState(false);
   const honorResult = LatinHonor(parseFloat(gwa ?? ""), reportSubjects, confirmedRestrictions);
   const isDisqualified = honorResult.startsWith("Not eligible");
-  const isPassing = honorResult.startsWith("Passing");
   const isBelowPassing = honorResult.startsWith("Below passing");
   const isFailed = honorResult.startsWith("Failed");
 
